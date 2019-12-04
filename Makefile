@@ -1,18 +1,19 @@
 # Dr. Steffen Kuehn / 2019
 
 # target
-BIN = phaseshift
 CFILES = $(wildcard *.cpp)
 OBJ = $(addprefix obj/,$(notdir $(CFILES:.cpp=.o)))
 STYLEFIX_FILES = $(wildcard *.cpp) $(wildcard *.h)
 	
 # compiler
-CPP = $(TOOLCHAIN)-g++
+CPPLINUX = g++
+BIN = phaseshift
 
 # flags
-LIBS = -lm -lrfftw -lfftw -L/opt/picoscope/lib -lps2000 -lsndfile -lgsl -lgslcblas
+LIBS = -lm -lrfftw -lfftw -L/opt/picoscope/lib -lps2000 -lps3000a -lsndfile -lgsl -lgslcblas
 FLAGS = $(INCS) -Wall -std=c++11
-INCS = -I/opt/picoscope/include/libps2000-2.1
+INCS += -I/opt/picoscope/include/libps2000-2.1
+INCS += -I/opt/picoscope/include/libps3000a-1.1
 
 ifdef DEBUG
 	FLAGS += -g2
@@ -24,11 +25,11 @@ endif
 all: clean target 
 
 $(BIN): $(OBJ)
-	$(CPP) $(OBJ) -o $(BIN) $(LIBS)
+	$(CPPLINUX) $(OBJ) -o $(BIN) $(LIBS)
 
 obj/%.o: %.cpp
 	@mkdir -p obj
-	$(CPP) $(FLAGS) -c -o $@ $<
+	$(CPPLINUX) $(FLAGS) -c -o $@ $<
 	
 target: $(BIN)
 	
